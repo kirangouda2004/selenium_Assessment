@@ -1,0 +1,129 @@
+task -01
+
+package Datadriventesting;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Properties;
+
+public class DemoWebshop {
+    public static void main(String[] args) throws IOException, InterruptedException {
+        FileInputStream fis=new FileInputStream("src/test/resources/DDT/common_data.properties");
+        Properties p=new Properties();
+        p.load(fis);
+        String browser=p.getProperty("browser");
+        String url=p.getProperty("url");
+        String email=p.getProperty("email");
+        String password=p.getProperty("password");
+
+        WebDriver driver=null;
+        if(browser.equals("chrome"))
+            driver=new ChromeDriver();
+        else
+            driver=new EdgeDriver();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.get(url);
+        driver.findElement(By.xpath("//a[text()='Log in']")).click();
+        driver.findElement(By.id("Email")).sendKeys(email);
+        driver.findElement(By.id("Password")).sendKeys(password);
+        Thread.sleep(2000);
+        driver.findElement(By.cssSelector("[value='Log in']")).click();
+    }
+}
+
+
+
+task -02
+
+
+package Datadriventesting;
+
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.Duration;
+
+public class OrangeHrmTask {
+    public static void main(String[] args) throws IOException, InterruptedException {
+        FileInputStream fir=new FileInputStream("src/test/resources/DDT/Excel_SauceDemo.xlsx");
+        Workbook wb=WorkbookFactory.create(fir);
+
+        String browser = wb.getSheet("Sheet1").getRow(2).getCell(0).getStringCellValue();
+        String url = wb.getSheet("Sheet1").getRow(2).getCell(1).getStringCellValue();
+        String username = wb.getSheet("Sheet1").getRow(2).getCell(2).getStringCellValue();
+        String password = wb.getSheet("Sheet1").getRow(2).getCell(3).getStringCellValue();
+
+        WebDriver driver=null;
+        if(browser.equals("chrome"))
+            driver=new ChromeDriver();
+        if(browser.equals("Edge"))
+            driver=new EdgeDriver();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.get(url);
+        driver.findElement(By.cssSelector("[name='username']")).sendKeys(username);
+        driver.findElement(By.cssSelector("[name='password']")).sendKeys(password);
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//button[text()=' Login ']")).click();
+
+    }
+}
+
+
+
+task - 03
+
+package Datadriventesting;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.Duration;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class Demoappsqspiders {
+	public static void main(String[] args) throws IOException, ParseException, InterruptedException {
+		FileReader fir=new FileReader("src/test/resources/DDT/properties.json");
+        JSONParser jsonParser=new JSONParser();
+        Object obj=jsonParser.parse(fir);
+        JSONObject json= (JSONObject) obj;
+
+        String browser = json.get("browser").toString();
+        String url = json.get("url").toString();
+        String username = json.get("username").toString();
+        String fullName = json.get("fullName").toString();
+        String email = json.get("Email").toString();
+        String password=json.get("password").toString();
+
+        WebDriver driver=new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.get(url);
+        driver.findElement(By.id("username")).sendKeys(username);
+        driver.findElement(By.id("fullname")).sendKeys(fullName);
+        driver.findElement(By.id("email")).sendKeys(email);
+        driver.findElement(By.id("password")).sendKeys(password);
+        Thread.sleep(2000);
+        driver.findElement(By.id("submit")).click();
+	}
+}
